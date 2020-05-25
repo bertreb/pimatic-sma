@@ -1,0 +1,49 @@
+{
+  "name": "pimatic-sma",
+  "description": "Pimatic plugin for getting values from sma investers",
+  "author": {
+    "name": "Bert",
+    "email": "gitbertreb@gmail.com"
+  },
+  "main": "sma",
+  "files": [
+    "sma.coffee",
+    "README.md",
+    "LICENSE",
+    "sma-config-schema.coffee",
+    "device-config-schema.coffee",
+    "sunnyboy.js"
+  ],
+  "version": "0.0.1",
+  "homepage": "https://github.com/bertreb/pimatic-sma",
+  "configSchema": "sma-config-schema.coffee",
+  "dependencies": {
+    "death": "^1.1.0",
+    "moment": "^2.0.2",
+    "needle": "^2.5.0"
+  },
+  "keywords": [
+    "pimatic",
+    "sma",
+    "sunnyboy",
+    "inverter",
+    "solar"
+  ],
+  "peerDependencies": {
+    "pimatic": ">=0.9.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">0.8.x",
+    "npm": ">1.1.x"
+  },
+  "bugs": {
+    "url": "https://github.com/bertreb/pimatic-sma/issues"
+  },
+  "maintainers": [
+    {
+      "name": "bertreb",
+      "email": "gitbertreb@gmail.com"
+    }
+  ]
+}
