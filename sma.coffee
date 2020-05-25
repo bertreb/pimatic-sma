@@ -4,7 +4,6 @@ module.exports = (env) ->
   _ = env.require 'lodash'
   request = require 'request'
 
-  #Sunnyboy = require('./sunnyboy.js')
 
   class SmaPlugin extends env.plugins.Plugin
 
@@ -15,24 +14,6 @@ module.exports = (env) ->
         configDef: deviceConfigDef["SmaInverter"],
         createCallback: (deviceConfig, lastState) => new SmaInverter(deviceConfig, lastState, @framework, this)
       })
-
-      ###
-      @framework.deviceManager.on 'discover', (eventData) =>
-        @framework.deviceManager.discoverMessage 'pimatic-dashboard', "scan for databases ..."
-        @Connector.getDatabaseNames().then( (dbase) =>
-          for db in dbase
-            if db is @database
-              @framework.deviceManager.discoverMessage 'pimatic-dashboard', "scan for databases ... database #{@database} found!"
-
-            do (db) =>
-              @Connector.getMeasurements(db).then( (names) =>
-                for nam in names
-                  do (nam) =>
-                    @framework.deviceManager.discoverMessage 'pimatic-dashboard', "scan for databases ... found: #{nam}"
-              )
-        )
-      ###
-
 
   class SmaInverter extends env.devices.Device
 
@@ -58,7 +39,7 @@ module.exports = (env) ->
         type: "number"
         acronym: "actual power"
         unit: "W"
-      @_createGetter("solaractualpower", =>Promise.resolve(@_solarActualPower))
+      @_createGetter("solaractualpower", => Promise.resolve(@_solarActualPower))
 
       options = {
         url: 'https://'+ @ip + '/dyn/getDashValues.json',
@@ -96,17 +77,13 @@ module.exports = (env) ->
             else
               env.logger.debug "Stopping updates"
       )
-
-
       super()
-
 
     destroy: ->
       clearTimeout(@dashValueTimer)
       if @panelSensor?
         @panelSensor.removeListener 'presence', @panelSensorHandler
       super()
-
 
   smaPlugin = new SmaPlugin()
   return smaPlugin
