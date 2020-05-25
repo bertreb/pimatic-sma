@@ -11,8 +11,7 @@
     "README.md",
     "LICENSE",
     "sma-config-schema.coffee",
-    "device-config-schema.coffee",
-    "sunnyboy.js"
+    "device-config-schema.coffee"
   ],
   "version": "0.0.1",
   "homepage": "https://github.com/bertreb/pimatic-sma",
