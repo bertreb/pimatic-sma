@@ -3,7 +3,7 @@ module.exports = (env) ->
   Promise = env.require 'bluebird'
   _ = env.require 'lodash'
   request = require 'request'
-  
+
   #Sunnyboy = require('./sunnyboy.js')
 
   class SmaPlugin extends env.plugins.Plugin
@@ -15,7 +15,7 @@ module.exports = (env) ->
         configDef: deviceConfigDef["SmaInverter"],
         createCallback: (deviceConfig, lastState) => new SmaInverter(deviceConfig, lastState, @framework, this)
       })
-      
+
       ###
       @framework.deviceManager.on 'discover', (eventData) =>
         @framework.deviceManager.discoverMessage 'pimatic-dashboard', "scan for databases ..."
@@ -23,7 +23,7 @@ module.exports = (env) ->
           for db in dbase
             if db is @database
               @framework.deviceManager.discoverMessage 'pimatic-dashboard', "scan for databases ... database #{@database} found!"
-          
+
             do (db) =>
               @Connector.getMeasurements(db).then( (names) =>
                 for nam in names
@@ -45,7 +45,7 @@ module.exports = (env) ->
       if @_destroyed then return
 
       @serial = null
-      @ip = @config.ip ? '192.168.1.16'
+      @ip = @config.ip
       @reqHeaders = {
         "Content-Type": 'application/x-www-form-urlencoded',
         "Accept": 'application/json, text/plain, */*',
@@ -73,7 +73,7 @@ module.exports = (env) ->
           if !error && response.statusCode == 200
             jsonResp = JSON.parse(body)
             @serial = Object.keys(jsonResp.result)[0] unless @serial?
-            _currentPower = Number jsonResp.result["0199-B32BC154"]["6100_40263F00"]["1"][0]["val"]
+            _currentPower = Number jsonResp.result[@serial]["6100_40263F00"]["1"][0]["val"]
             env.logger.debug "_currentPower: " + _currentPower
             @_solarActualPower = _currentPower
             @emit "solaractualpower", _currentPower
@@ -92,12 +92,12 @@ module.exports = (env) ->
             clearTimeout(@dashValueTimer)
             if presence
               env.logger.debug "Starting updates"
-              @getDashValues() 
+              @getDashValues()
             else
               env.logger.debug "Stopping updates"
       )
 
-  
+
       super()
 
 
