@@ -71,12 +71,13 @@ module.exports = (env) ->
           @panelSensor.on 'presence', @panelSensorHandler = (presence) =>
             env.logger.debug "PanelSensor presence " + presence
             clearTimeout(@dashValueTimer)
+            @dashValueTimer = null
             if presence
               env.logger.debug "Starting updates"
               @getDashValues()
             else
               env.logger.debug "Stopping updates"
-      )
+       )
       super()
 
     destroy: ->
