@@ -24,6 +24,7 @@ module.exports = (env) ->
 
       @_solarActualPower = 0
       @_solarTotalPower = 0
+      @_gridOutPower = 0
 
       if @_destroyed then return
 
@@ -48,6 +49,12 @@ module.exports = (env) ->
         acronym: "total power"
         unit: "W"
       @_createGetter("solartotalpower", => Promise.resolve(@_solarTotalPower))
+      @attributes["gridoutpower"] =
+        description: "Actual grid out power"
+        type: "number"
+        acronym: "grid out power"
+        unit: "W"
+      @_createGetter("gridoutpower", => Promise.resolve(@_gridOutPower))
 
       options = {
         url: 'https://'+ @ip + '/dyn/getDashValues.json',
@@ -64,12 +71,16 @@ module.exports = (env) ->
             @serial = Object.keys(jsonResp.result)[0] unless @serial?
             _currentPower = Number jsonResp.result[@serial]["6100_40263F00"]["1"][0]["val"]
             _totalPower = Number jsonResp.result[@serial]["6400_00260100"]["1"][0]["val"]
+            _currentPowerGridOut = Number jsonResp.result[@serial]["6100_40463600"]["1"][0]["val"]
             env.logger.debug "_currentPower: " + _currentPower
             env.logger.debug "_totalPower: " + _totalPower
+            env.logger.debug "_gridOutPower: " + _currentPowerGridOut
             @_solarActualPower = _currentPower
             @_solarTotalPower = _totalPower
+            @_gridOutPower = _currentPowerGridOut
             @emit "solaractualpower", _currentPower
             @emit "solartotalpower", _totalPower
+            @emit "gridoutpower", _currentPowerGridOut
         )
         @dashValueTimer = setTimeout(@getDashValues,5000)
 
