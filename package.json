@@ -13,12 +13,12 @@
     "sma-config-schema.coffee",
     "device-config-schema.coffee"
   ],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/bertreb/pimatic-sma",
   "configSchema": "sma-config-schema.coffee",
   "dependencies": {
     "cron": "^1.7.2",
-    "request": "^2.79.0"    
+    "request": "^2.79.0"
   },
   "keywords": [
     "pimatic",

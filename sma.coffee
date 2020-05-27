@@ -73,7 +73,7 @@ module.exports = (env) ->
         )
         @dashValueTimer = setTimeout(@getDashValues,5000)
 
-      @getDashValues()
+      #@getDashValues()
 
       @framework.variableManager.waitForInit()
       .then(()=>
