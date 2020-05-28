@@ -7,3 +7,5 @@
 	* use energymeter for grid out
 * 202005267, v0.0.6
 	* use energymeter for grid in
+* 202005267, v0.0.7
+	* edit daily update timer

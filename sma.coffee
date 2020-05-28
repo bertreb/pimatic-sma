@@ -115,8 +115,11 @@ module.exports = (env) ->
 
       @dailyProductionJob = new CronJob
         cronTime:  everyDay
-        start: true
-        onTick: => @getDashValues()
+        onTick: => 
+          @getDashValues()
+          env.logger.debug "Daily production update"
+
+      @dailyProductionJob.start()
 
       super()
 
