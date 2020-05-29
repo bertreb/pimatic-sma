@@ -4,7 +4,7 @@ module.exports = (env) ->
   request = require 'request'
   CronJob = env.CronJob or require('cron').CronJob
 
-  everyDay = "23 0 0 * * *" # at 23:00
+  everyDay = "00 00 23 * * *" # at 23:00
 
   class SmaPlugin extends env.plugins.Plugin
 

@@ -9,3 +9,5 @@
 	* use energymeter for grid in
 * 202005267, v0.0.7
 	* edit daily update timer
+* 202005267, v0.0.8
+	* fix cronjob
