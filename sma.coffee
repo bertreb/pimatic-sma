@@ -48,7 +48,7 @@ module.exports = (env) ->
         description: "Total generated solar power"
         type: "number"
         acronym: "total power"
-        unit: "W"
+        unit: "Wh"
       @_createGetter("solartotalpower", => Promise.resolve(@_solarTotalPower))
       @attributes["gridoutpower"] =
         description: "Actual grid out power"
@@ -97,6 +97,7 @@ module.exports = (env) ->
 
       #@getDashValues()
 
+      ###
       @framework.variableManager.waitForInit()
       .then(()=>
         @panelSensor = @framework.deviceManager.getDeviceById(@config.panelSensor)
@@ -111,7 +112,8 @@ module.exports = (env) ->
               @getDashValues()
             else
               env.logger.debug "Stopping updates"
-       )
+      )
+      ###
 
       @dailyProductionJob = new CronJob
         cronTime:  everyDay

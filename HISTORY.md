@@ -11,3 +11,5 @@
 	* edit daily update timer
 * 202005267, v0.0.8
 	* fix cronjob
+* 202005267, v0.0.9
+	* only daily 23:02 cronjob
