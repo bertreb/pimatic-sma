@@ -93,7 +93,7 @@ module.exports = (env) ->
             @emit "gridoutpower", _currentPowerGridOut
             @emit "gridinpower", _currentPowerGridIn
         )
-        @dashValueTimer = setTimeout(@getDashValues,5000)
+        #@dashValueTimer = setTimeout(@getDashValues,5000)
 
       #@getDashValues()
 
