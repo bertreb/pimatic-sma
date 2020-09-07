@@ -8,8 +8,12 @@ module.exports = {
       ip:
         description: "The ip adres of the inverter"
         type: "string"
+      pollTimer:
+        description: "The polling time in ms"
+        type: "number"
+        default: 5000
       panelSensor:
-        description: "Pimatic device id of panel MQTT presence sensor"
+        description: "Legacy parameter, not used anymore"
         type: "string"
   }
 }

@@ -2,9 +2,6 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   request = require 'request'
-  CronJob = env.CronJob or require('cron').CronJob
-
-  everyDay = "00 00 23 * * *" # at 23:00
 
   class SmaPlugin extends env.plugins.Plugin
 
@@ -22,10 +19,13 @@ module.exports = (env) ->
       @id = @config.id
       @name = @config.name
 
+      @pollTime = @config.pollTime ? 5000
+
       @_solarActualPower = 0
       @_solarTotalPower = 0
       @_gridOutPower = 0
       @_gridInPower = 0
+      @errorKnown = false
 
       if @_destroyed then return
 
@@ -78,58 +78,36 @@ module.exports = (env) ->
             @serial = Object.keys(jsonResp.result)[0] unless @serial?
             _currentPower = Number jsonResp.result[@serial]["6100_40263F00"]["1"][0]["val"]
             _totalPower = Number jsonResp.result[@serial]["6400_00260100"]["1"][0]["val"]
-            _currentPowerGridOut = Number jsonResp.result[@serial]["6100_40463600"]["1"][0]["val"]
-            _currentPowerGridIn = Number jsonResp.result[@serial]["6100_40463700"]["1"][0]["val"]
             env.logger.debug "_currentPower: " + _currentPower
             env.logger.debug "_totalPower: " + _totalPower
-            env.logger.debug "_gridOutPower: " + _currentPowerGridOut
-            env.logger.debug "_gridInPower: " + _currentPowerGridIn
             @_solarActualPower = _currentPower
             @_solarTotalPower = _totalPower
             @_gridOutPower = _currentPowerGridOut
             @_gridInPower = _currentPowerGridIn
             @emit "solaractualpower", _currentPower
             @emit "solartotalpower", _totalPower
-            @emit "gridoutpower", _currentPowerGridOut
-            @emit "gridinpower", _currentPowerGridIn
+            # try if PowerGrid In and Out are available
+            try
+              _currentPowerGridOut = Number jsonResp.result[@serial]["6100_40463600"]["1"][0]["val"]
+              _currentPowerGridIn = Number jsonResp.result[@serial]["6100_40463700"]["1"][0]["val"]
+              env.logger.debug "_gridOutPower: " + _currentPowerGridOut
+              env.logger.debug "_gridInPower: " + _currentPowerGridIn
+              @emit "gridoutpower", _currentPowerGridOut
+              @emit "gridinpower", _currentPowerGridIn
+              @errorKnown = false
+            catch err
+              unless @errorKnown
+                env.logger.info "GridPower IN and OUT are not available"
+                @errorKnown = true
         )
-        #@dashValueTimer = setTimeout(@getDashValues,5000)
+        @dashValueTimer = setTimeout(@getDashValues,@pollTime)
 
-      #@getDashValues()
-
-      ###
-      @framework.variableManager.waitForInit()
-      .then(()=>
-        @panelSensor = @framework.deviceManager.getDeviceById(@config.panelSensor)
-        if @panelSensor?
-          env.logger.debug "PanelSensor added: " + @panelSensor.id
-          @panelSensor.on 'presence', @panelSensorHandler = (presence) =>
-            env.logger.debug "PanelSensor presence " + presence
-            clearTimeout(@dashValueTimer)
-            @dashValueTimer = null
-            if presence
-              env.logger.debug "Starting updates"
-              @getDashValues()
-            else
-              env.logger.debug "Stopping updates"
-      )
-      ###
-
-      @dailyProductionJob = new CronJob
-        cronTime:  everyDay
-        onTick: => 
-          @getDashValues()
-          env.logger.debug "Daily production update"
-
-      @dailyProductionJob.start()
+      @getDashValues()
 
       super()
 
     destroy: ->
       clearTimeout(@dashValueTimer)
-      if @panelSensor?
-        @panelSensor.removeListener 'presence', @panelSensorHandler
-      @dailyProductionJob.stop()
       super()
 
   smaPlugin = new SmaPlugin()
