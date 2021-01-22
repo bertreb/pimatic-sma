@@ -12,8 +12,5 @@ module.exports = {
         description: "The polling time in ms"
         type: "number"
         default: 5000
-      panelSensor:
-        description: "Legacy parameter, not used anymore"
-        type: "string"
   }
 }

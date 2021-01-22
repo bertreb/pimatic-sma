@@ -13,3 +13,9 @@
 	* fix cronjob
 * 20200604, v0.0.10
 	* only daily 23:02 cronjob
+* 202009067, v0.0.11
+	* removed daily cronjob
+	* added configurable poll time of inverter
+* 20210122, v0.0.12
+	* relased updated polltimer version
+	* removed panel sensor
