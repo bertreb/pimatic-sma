@@ -73,21 +73,23 @@ module.exports = (env) ->
 
       @getDashValues = () =>
         request(options, (error,response,body) =>
-          if !error && response.statusCode == 200
-            jsonResp = JSON.parse(body)
-            @serial = Object.keys(jsonResp.result)[0] unless @serial?
-            _currentPower = Number jsonResp.result[@serial]["6100_40263F00"]["1"][0]["val"]
-            _totalPower = Number jsonResp.result[@serial]["6400_00260100"]["1"][0]["val"]
-            env.logger.debug "_currentPower: " + _currentPower
-            env.logger.debug "_totalPower: " + _totalPower
-            @_solarActualPower = _currentPower
-            @_solarTotalPower = _totalPower
-            @_gridOutPower = _currentPowerGridOut
-            @_gridInPower = _currentPowerGridIn
-            @emit "solaractualpower", _currentPower
-            @emit "solartotalpower", _totalPower
-            # try if PowerGrid In and Out are available
+          if error
+            env.logger.debug "error getDashValues, error: " + response.statusCode
+          else if !error && response.statusCode == 200
             try
+              jsonResp = JSON.parse(body)
+              @serial = Object.keys(jsonResp.result)[0] unless @serial?
+              _currentPower = Number jsonResp.result[@serial]["6100_40263F00"]["1"][0]["val"]
+              _totalPower = Number jsonResp.result[@serial]["6400_00260100"]["1"][0]["val"]
+              env.logger.debug "_currentPower: " + _currentPower
+              env.logger.debug "_totalPower: " + _totalPower
+              @_solarActualPower = _currentPower
+              @_solarTotalPower = _totalPower
+              @_gridOutPower = _currentPowerGridOut
+              @_gridInPower = _currentPowerGridIn
+              @emit "solaractualpower", _currentPower
+              @emit "solartotalpower", _totalPower
+              # try if PowerGrid In and Out are available
               _currentPowerGridOut = Number jsonResp.result[@serial]["6100_40463600"]["1"][0]["val"]
               _currentPowerGridIn = Number jsonResp.result[@serial]["6100_40463700"]["1"][0]["val"]
               env.logger.debug "_gridOutPower: " + _currentPowerGridOut
@@ -97,7 +99,7 @@ module.exports = (env) ->
               @errorKnown = false
             catch err
               unless @errorKnown
-                env.logger.info "GridPower IN and OUT are not available"
+                env.logger.info "Error getDashValues: " + err
                 @errorKnown = true
         )
         @dashValueTimer = setTimeout(@getDashValues,@pollTime)

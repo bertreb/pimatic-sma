@@ -17,5 +17,7 @@
 	* removed daily cronjob
 	* added configurable poll time of inverter
 * 20210122, v0.0.12
-	* relased updated polltimer version
+	* released updated polltimer version
 	* removed panel sensor
+* 20210320, v0.0.13
+	* edit request error handling
