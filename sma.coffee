@@ -74,7 +74,7 @@ module.exports = (env) ->
       @getDashValues = () =>
         request(options, (error,response,body) =>
           if error
-            env.logger.debug "error getDashValues, error: " + response.statusCode
+            env.logger.debug "error getDashValues: " + JSON.stringify(error,null,2)
           else if !error && response.statusCode == 200
             try
               jsonResp = JSON.parse(body)

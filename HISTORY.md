@@ -21,3 +21,5 @@
 	* removed panel sensor
 * 20210320, v0.0.13
 	* edit request error handling
+* 20210520, v0.0.14
+	* edit error handling (line 77)
