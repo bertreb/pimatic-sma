@@ -23,3 +23,5 @@
 	* edit request error handling
 * 20210520, v0.0.14
 	* edit error handling (line 77)
+* 20210822, v0.0.15
+	* fix gridoutpower and gridinpower values

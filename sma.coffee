@@ -85,13 +85,13 @@ module.exports = (env) ->
               env.logger.debug "_totalPower: " + _totalPower
               @_solarActualPower = _currentPower
               @_solarTotalPower = _totalPower
-              @_gridOutPower = _currentPowerGridOut
-              @_gridInPower = _currentPowerGridIn
               @emit "solaractualpower", _currentPower
               @emit "solartotalpower", _totalPower
               # try if PowerGrid In and Out are available
               _currentPowerGridOut = Number jsonResp.result[@serial]["6100_40463600"]["1"][0]["val"]
               _currentPowerGridIn = Number jsonResp.result[@serial]["6100_40463700"]["1"][0]["val"]
+              @_gridOutPower = _currentPowerGridOut
+              @_gridInPower = _currentPowerGridIn
               env.logger.debug "_gridOutPower: " + _currentPowerGridOut
               env.logger.debug "_gridInPower: " + _currentPowerGridIn
               @emit "gridoutpower", _currentPowerGridOut
